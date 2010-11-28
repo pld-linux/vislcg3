@@ -1,0 +1,40 @@
+--- vislcg3-0.9.7.6500/configure.ac.orig	2010-08-19 19:23:02.000000000 +0200
++++ vislcg3-0.9.7.6500/configure.ac	2010-11-28 18:52:22.394121097 +0100
+@@ -14,37 +14,6 @@
+ 
+ AC_CHECK_ICU(3.6)
+ 
+-AC_MSG_CHECKING([Compilation architecture: PPC, i686, x86_64, Other])
+-if test x$(which arch) = x
+-then ARCH=$($(which uname) -m)
+-else ARCH=$($(which arch))
+-fi
+-
+-if test x$ARCH = xppc
+-then
+-  AC_MSG_RESULT([PowerPC])
+-  CFLAGS="-Wall -Wextra -ansi -mpowerpc -maltivec -mdynamic-no-pic -fomit-frame-pointer $CFLAGS"
+-  CXXFLAGS="-Wall -Wextra -ansi -mpowerpc -maltivec -mdynamic-no-pic -fomit-frame-pointer $CXXFLAGS"
+-else
+-  if test x$ARCH = xi686
+-  then
+-    AC_MSG_RESULT([i686])
+-    CFLAGS="-Wall -Wextra -ansi -march=i686 -O3 -fomit-frame-pointer -funroll-loops $CFLAGS"
+-    CXXFLAGS="-Wall -Wextra -ansi -march=i686 -O3 -fomit-frame-pointer -funroll-loops $CXXFLAGS"
+-  else
+-    if test x$ARCH = xx86_64
+-    then
+-      AC_MSG_RESULT([x86_64])
+-      CFLAGS="-Wall -Wextra -ansi -O3 -march=nocona -fomit-frame-pointer -funroll-loops $CFLAGS"
+-      CXXFLAGS="-Wall -Wextra -ansi -O3 -march=nocona -fomit-frame-pointer -funroll-loops $CXXFLAGS"
+-    else
+-      AC_MSG_RESULT([Other])
+-      CFLAGS="-Wall -Wextra -ansi -O3 $CFLAGS"
+-      CXXFLAGS="-Wall -Wextra -ansi -O3 $CXXFLAGS"
+-    fi
+-  fi
+-fi
+-
+ ICUCPPFLAGS=`icu-config --cppflags`
+ CXXFLAGS="-Wno-deprecated $ICUCPPFLAGS $CXXFLAGS"
+ 
