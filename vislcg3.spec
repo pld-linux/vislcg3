@@ -14,6 +14,7 @@ BuildRequires:	automake
 BuildRequires:	boost-devel >= 1.36.0
 BuildRequires:	libicu-devel >= 3.6
 BuildRequires:	libstdc++-devel
+BuildRequires:	pkgconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
