@@ -2,7 +2,7 @@ Summary:	VISL CG-3 constraint grammar system
 Summary(pl.UTF-8):	VISL CG-3 - system ograniczonej gramatyki
 Name:		vislcg3
 Version:	0.9.7.7397
-Release:	4
+Release:	5
 License:	GPL v3+
 Group:		Applications/Text
 Source0:	http://beta.visl.sdu.dk/download/vislcg3/%{name}-%{version}.tar.gz
@@ -24,7 +24,9 @@ VISL CG-3 - system ograniczonej gramatyki.
 %prep
 %setup -q
 
-sed -i -e 's#DESTINATION lib#DESTINATION %{_lib}#g' */CMakeLists.txt
+sed -i -e 's#DESTINATION lib#DESTINATION %{_lib}#g' \
+	-e 's#GOOGLE_TCMALLOC_LIB tcmalloc#GOOGLE_TCMALLOC_LIB tcmalloc_disabled#' \
+	src/CMakeLists.txt
 
 %build
 %cmake .
