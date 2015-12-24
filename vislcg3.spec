@@ -1,15 +1,16 @@
+# TODO: package /usr/share/emacs/site-lisp/cg.el
 Summary:	VISL CG-3 constraint grammar system
 Summary(pl.UTF-8):	VISL CG-3 - system ograniczonej gramatyki
 Name:		vislcg3
-Version:	0.9.8.9708
-Release:	4
+Version:	0.9.9.10800
+Release:	1
 License:	GPL v3+
 Group:		Applications/Text
-Source0:	http://beta.visl.sdu.dk/download/vislcg3/%{name}-%{version}.tar.gz
-# Source0-md5:	573ffaa88a6850930cbeb7341d66df2e
+Source0:	http://beta.visl.sdu.dk/download/vislcg3/cg3-0.9.9~r10800.tar.bz2
+# Source0-md5:	c6a6549cf040077949ee33ca239d3128
 URL:		http://beta.visl.sdu.dk/cg3.html
-BuildRequires:	cmake >= 2.8.0
-BuildRequires:	boost-devel >= 1.40.0
+BuildRequires:	cmake >= 2.8.9
+BuildRequires:	boost-devel >= 1.48.0
 BuildRequires:	libicu-devel >= 4.2
 BuildRequires:	libstdc++-devel
 BuildRequires:	rpmbuild(macros) >= 1.603
@@ -47,10 +48,7 @@ Static VISL CG-3 library.
 Statyczna biblioteka VISL CG-3.
 
 %prep
-%setup -q
-
-%{__sed} -i -e 's#DESTINATION lib/pkgconfig#DESTINATION %{_lib}/pkgconfig#g' CMakeLists.txt
-%{__sed} -i -e 's#DESTINATION lib#DESTINATION %{_lib}#g' src/CMakeLists.txt
+%setup -q -n cg3
 
 %build
 # it expectls only relative CMAKE_INSTALL_LIBDIR
@@ -66,10 +64,6 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-# "improved" cmake scripts don't install it
-install -d $RPM_BUILD_ROOT%{_mandir}/man1
-install src/*.1 $RPM_BUILD_ROOT%{_mandir}/man1
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -84,13 +78,16 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/cg-proc
 %attr(755,root,root) %{_bindir}/cg3-autobin.pl
 %attr(755,root,root) %{_bindir}/vislcg3
-%attr(755,root,root) %{_libdir}/libcg3.so
+%attr(755,root,root) %{_libdir}/libcg3.so.0
 %{_mandir}/man1/cg-comp.1*
+%{_mandir}/man1/cg-conv.1*
 %{_mandir}/man1/cg-proc.1*
+%{_mandir}/man1/cg3-autobin.pl.1*
 %{_mandir}/man1/vislcg3.1*
 
 %files devel
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libcg3.so
 %{_includedir}/cg3.h
 %{_pkgconfigdir}/cg3.pc
 
