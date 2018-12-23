@@ -1,19 +1,24 @@
-# TODO: package /usr/share/emacs/site-lisp/cg.el
+#
+# Conditional build:
+%bcond_without	static_libs	# static library
+
 Summary:	VISL CG-3 constraint grammar system
 Summary(pl.UTF-8):	VISL CG-3 - system ograniczonej gramatyki
 Name:		vislcg3
-Version:	0.9.9.10800
-Release:	4
+Version:	1.1.7
+Release:	1
 License:	GPL v3+
 Group:		Applications/Text
-Source0:	http://beta.visl.sdu.dk/download/vislcg3/cg3-0.9.9~r10800.tar.bz2
-# Source0-md5:	c6a6549cf040077949ee33ca239d3128
+#Source0Download: https://github.com/TinoDidriksen/cg3/releases
+Source0:	https://github.com/TinoDidriksen/cg3/archive/v%{version}/cg3-%{version}.tar.gz
+# Source0-md5:	85e74c3e7fb5f5a13b7ab1690ffef910
 URL:		http://beta.visl.sdu.dk/cg3.html
 BuildRequires:	cmake >= 2.8.9
 BuildRequires:	boost-devel >= 1.63.0-4
-BuildRequires:	libicu-devel >= 4.2
-BuildRequires:	libstdc++-devel
-BuildRequires:	rpmbuild(macros) >= 1.603
+BuildRequires:	libicu-devel >= 50.0
+# -std=c++14
+BuildRequires:	libstdc++-devel >= 6:5.0
+BuildRequires:	rpmbuild(macros) >= 1.605
 BuildRequires:	sed >= 4.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -47,21 +52,44 @@ Static VISL CG-3 library.
 %description static -l pl.UTF-8
 Statyczna biblioteka VISL CG-3.
 
+%package -n emacs-cg-mode
+Summary:	CG-3 mode for Emacs
+Summary(pl.UTF-8):	Tryb CG-3 dla Emacsa
+Group:		Applications/Editors/Emacs
+Requires:	emacs-common
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
+
+%description -n emacs-cg-mode
+CG-3 mode for Emacs.
+
+%description -n emacs-cg-mode -l pl.UTF-8
+Tryb CG-3 dla Emacsa.
+
 %prep
-%setup -q -n cg3
+%setup -q -n cg3-%{version}
+
+# not executable
+%{__sed} -i -e '1s,.*/usr/bin/env perl,,' scripts/CG3_External.pm
+# invoke directly
+%{__sed} -i -e '1s,/usr/bin/env perl,%{__perl},' scripts/{cg-sort,cg-strictify,cg-untrace,cg3-autobin.pl.in}
 
 %build
+install -d build
+cd build
 # it expectls only relative CMAKE_INSTALL_LIBDIR
-%cmake . \
+%cmake .. \
 	-DCMAKE_INSTALL_LIBDIR=%{_lib} \
-	-DOPT_TCMALLOC=OFF
+	%{?with_static_libs:-DINSTALL_STATIC=ON} \
+	-DUSE_TCMALLOC=OFF
 
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install \
+%{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 %clean
@@ -72,13 +100,18 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS README TODO
+%doc AUTHORS ChangeLog README.md TODO
 %attr(755,root,root) %{_bindir}/cg-comp
 %attr(755,root,root) %{_bindir}/cg-conv
+%attr(755,root,root) %{_bindir}/cg-mwesplit
 %attr(755,root,root) %{_bindir}/cg-proc
+%attr(755,root,root) %{_bindir}/cg-relabel
+%attr(755,root,root) %{_bindir}/cg-sort
+%attr(755,root,root) %{_bindir}/cg-strictify
+%attr(755,root,root) %{_bindir}/cg-untrace
 %attr(755,root,root) %{_bindir}/cg3-autobin.pl
 %attr(755,root,root) %{_bindir}/vislcg3
-%attr(755,root,root) %{_libdir}/libcg3.so.0
+%attr(755,root,root) %{_libdir}/libcg3.so.1
 %{_mandir}/man1/cg-comp.1*
 %{_mandir}/man1/cg-conv.1*
 %{_mandir}/man1/cg-proc.1*
@@ -91,6 +124,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/cg3.h
 %{_pkgconfigdir}/cg3.pc
 
+%if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libcg3.a
+%endif
+
+%files -n emacs-cg-mode
+%defattr(644,root,root,755)
+%{_datadir}/emacs/site-lisp/cg.el
