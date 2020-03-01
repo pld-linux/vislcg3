@@ -6,13 +6,13 @@
 Summary:	VISL CG-3 constraint grammar system
 Summary(pl.UTF-8):	VISL CG-3 - system ograniczonej gramatyki
 Name:		vislcg3
-Version:	1.3.0
-Release:	2
+Version:	1.3.1
+Release:	1
 License:	GPL v3+
 Group:		Applications/Text
 #Source0Download: https://github.com/TinoDidriksen/cg3/releases
 Source0:	https://github.com/TinoDidriksen/cg3/archive/v%{version}/cg3-%{version}.tar.gz
-# Source0-md5:	e71a3c5d486832a5a6fad0ddc8651bac
+# Source0-md5:	a5b608f4ee7e5d7427b360ef22d58348
 Patch0:		%{name}-static.patch
 URL:		http://beta.visl.sdu.dk/cg3.html
 BuildRequires:	cmake >= 3.0
@@ -96,12 +96,13 @@ Tryb CG-3 dla Emacsa.
 %{__sed} -i -e '1s,/usr/bin/env perl,%{__perl},' scripts/{cg-sort,cg-strictify,cg-untrace,cg3-autobin.pl.in}
 
 %build
-# it expectls only relative CMAKE_INSTALL_LIBDIR
+# it expectls only relative CMAKE_INSTALL_LIBDIR and CMAKE_INSTALL_INCLUDEDIR (see cg.pc)
 %if %{with static_libs}
 install -d build-static
 cd build-static
 %cmake .. \
 	-DBUILD_SHARED_LIBS=OFF \
+	-DCMAKE_INSTALL_INCLUDEDIR=include \
 	-DCMAKE_INSTALL_LIBDIR=%{_lib} \
 	-DUSE_TCMALLOC=OFF
 
@@ -112,6 +113,7 @@ cd ..
 install -d build
 cd build
 %cmake .. \
+	-DCMAKE_INSTALL_INCLUDEDIR=include \
 	-DCMAKE_INSTALL_LIBDIR=%{_lib} \
 	%{?with_python:-DENABLE_PYTHON_BINDINGS=ON} \
 	-DPYTHON_INSTALL_PARAMS="--prefix=%{_prefix} --root=$RPM_BUILD_ROOT --optimize=2" \
@@ -172,7 +174,9 @@ rm -rf $RPM_BUILD_ROOT
 %files -n python3-constraint_grammar
 %defattr(644,root,root,755)
 %attr(755,root,root) %{py3_sitedir}/_constraint_grammar.cpython-*.so
+%{py3_sitedir}/cg3.py
 %{py3_sitedir}/constraint_grammar.py
+%{py3_sitedir}/__pycache__/cg3.cpython-*.py[co]
 %{py3_sitedir}/__pycache__/constraint_grammar.cpython-*.py[co]
 %{py3_sitedir}/constraint_grammar-%{version}.*-py*.egg-info
 %endif
