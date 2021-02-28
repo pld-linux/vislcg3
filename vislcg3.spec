@@ -76,9 +76,7 @@ Summary:	CG-3 mode for Emacs
 Summary(pl.UTF-8):	Tryb CG-3 dla Emacsa
 Group:		Applications/Editors/Emacs
 Requires:	emacs-common
-%if "%{_rpmversion}" >= "5"
 BuildArch:	noarch
-%endif
 
 %description -n emacs-cg-mode
 CG-3 mode for Emacs.
