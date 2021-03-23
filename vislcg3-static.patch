@@ -1,5 +1,5 @@
---- cg3-1.3.0/CMakeLists.txt.orig	2019-09-29 21:20:05.000000000 +0200
-+++ cg3-1.3.0/CMakeLists.txt	2019-10-17 20:06:34.647892619 +0200
+--- cg3-1.3.2/CMakeLists.txt.orig	2021-03-23 19:52:01.468693496 +0100
++++ cg3-1.3.2/CMakeLists.txt	2021-03-23 20:06:00.977478820 +0100
 @@ -50,7 +50,11 @@
  	include(CheckCCompilerFlag)
  	include(CheckCXXCompilerFlag)
@@ -7,9 +7,9 @@
 -	foreach(flag "-Wno-unused-result" "-flto")
 +	set(flags_to_check "-Wno-unused-result")
 +	if(BUILD_SHARED_LIBS)
-+            set(flags_to_check "${flags_to_check} -flto")
++		set(flags_to_check "${flags_to_check} -flto")
 +	endif()
 +	foreach(flag ${flags_to_check})
- 		string(REGEX REPLACE "[^A-Za-z0-9]" "-" _flag ${flag})
+ 		string(REGEX REPLACE "[^A-Za-z0-9]" "" _flag ${flag})
  		CHECK_CXX_COMPILER_FLAG(${flag} COMPILER_SUPPORTS_${_flag})
  		if(COMPILER_SUPPORTS_${_flag})
