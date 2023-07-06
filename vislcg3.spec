@@ -6,20 +6,20 @@
 Summary:	VISL CG-3 constraint grammar system
 Summary(pl.UTF-8):	VISL CG-3 - system ograniczonej gramatyki
 Name:		vislcg3
-Version:	1.3.9
-Release:	3
+Version:	1.4.5
+Release:	1
 License:	GPL v3+
 Group:		Applications/Text
 #Source0Download: https://github.com/TinoDidriksen/cg3/releases
 Source0:	https://github.com/TinoDidriksen/cg3/archive/v%{version}/cg3-%{version}.tar.gz
-# Source0-md5:	d873478a84fdb44b6f444d74c90077b5
+# Source0-md5:	cbb7cbe0776596f59c5672a3a30219d9
 Patch0:		%{name}-static.patch
 URL:		http://beta.visl.sdu.dk/cg3.html
 BuildRequires:	cmake >= 3.0
 BuildRequires:	boost-devel >= 1.63.0-4
 BuildRequires:	libicu-devel >= 50.0
-# -std=c++14
-BuildRequires:	libstdc++-devel >= 6:5.0
+# -std=c++17 is minimum
+BuildRequires:	libstdc++-devel >= 6:7
 BuildRequires:	rpmbuild(macros) >= 1.714
 BuildRequires:	sed >= 4.0
 %if %{with python}
@@ -139,8 +139,10 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog README.md TODO
+%attr(755,root,root) %{_bindir}/cg-annotate
 %attr(755,root,root) %{_bindir}/cg-comp
 %attr(755,root,root) %{_bindir}/cg-conv
+%attr(755,root,root) %{_bindir}/cg-merge-annotations
 %attr(755,root,root) %{_bindir}/cg-mwesplit
 %attr(755,root,root) %{_bindir}/cg-proc
 %attr(755,root,root) %{_bindir}/cg-relabel
