@@ -14,6 +14,7 @@ Group:		Applications/Text
 Source0:	https://github.com/TinoDidriksen/cg3/archive/v%{version}/cg3-%{version}.tar.gz
 # Source0-md5:	cbb7cbe0776596f59c5672a3a30219d9
 Patch0:		%{name}-static.patch
+Patch1:		python-cmake.patch
 URL:		http://beta.visl.sdu.dk/cg3.html
 BuildRequires:	cmake >= 3.0
 BuildRequires:	boost-devel >= 1.63.0-4
@@ -86,7 +87,8 @@ Tryb CG-3 dla Emacsa.
 
 %prep
 %setup -q -n cg3-%{version}
-%patch0 -p1
+%patch -P0 -p1
+%patch -P1 -p1
 
 # not executable
 %{__sed} -i -e '1s,.*/usr/bin/env perl,,' scripts/CG3_External.pm
